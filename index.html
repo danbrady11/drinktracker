@@ -33,17 +33,17 @@
   body {
     font-family: "Nunito", ui-rounded, system-ui, sans-serif;
     font-weight: 800;
-    padding: calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 24px);
+    padding: calc(env(safe-area-inset-top) + 10px) 16px calc(env(safe-area-inset-bottom) + 10px);
   }
   button, input { font: inherit; color: inherit; }
   button { cursor: pointer; }
   .wrap { max-width: 560px; margin: 0 auto; }
 
-  header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
   .year { display: flex; align-items: center; gap: 4px; }
-  .year h1 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: .5px; min-width: 72px; text-align: center; }
+  .year h1 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: .5px; min-width: 62px; text-align: center; }
   .icon-btn {
-    width: 36px; height: 36px; border-radius: 12px; border: 2.5px solid var(--ink);
+    width: 34px; height: 34px; border-radius: 12px; border: 2.5px solid var(--ink);
     background: var(--card); display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0; flex: none;
   }
   .icon-btn:disabled { opacity: .3; cursor: default; }
@@ -52,25 +52,37 @@
     box-shadow: 0 3px 0 var(--ink); background: var(--card);
   }
   .chunky:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
-  .today-btn { background: var(--l0); padding: 9px 14px; font-size: 15px; }
+  .today-btn { background: var(--l0); padding: 7px 12px; font-size: 15px; }
+  .head-right { display: flex; align-items: center; gap: 8px; }
+  .pick { position: relative; width: 40px; height: 38px; padding: 0; font-size: 19px; }
+  .pick input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; cursor: pointer; }
 
-  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 18px; }
-  .stat { border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px 2px; text-align: center; }
-  .stat b { display: block; font-size: 21px; font-weight: 900; line-height: 1.1; }
-  .stat span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; }
+  .recent-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin: 0 0 4px; }
+  .recent { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 14px; }
+  .rday { border: 2.5px solid var(--ink); border-radius: 12px; background: var(--card); padding: 4px 0 5px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .rday small { font-size: 10px; color: var(--muted); line-height: 1; }
+  .rday b { font-size: 15px; line-height: 1; }
+  .rday .sw { width: 22px; height: 20px; border-radius: 6px; display: grid; place-items: center; font-size: 11px; }
+  .rday.today { box-shadow: 0 3px 0 var(--ink); }
 
-  .months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px 14px; }
-  .month h2 { margin: 0 0 2px; text-align: center; font-size: 13px; font-weight: 900; letter-spacing: .5px; }
-  .dow { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 2px; font-size: 10px; text-align: center; margin-bottom: 2px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+  .stat { border: 2.5px solid var(--ink); border-radius: 12px; padding: 4px 2px; text-align: center; }
+  .stat b { display: block; font-size: 18px; font-weight: 900; line-height: 1.1; }
+  .stat span { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; }
+
+  .months { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 8px; margin: 0 auto; }
+  .month h2 { margin: 0 0 1px; text-align: center; font-size: 10px; font-weight: 900; letter-spacing: .2px; }
+  .dow { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 1px; font-size: 7px; text-align: center; margin-bottom: 1px; }
   .month svg { display: block; width: 100%; height: auto; overflow: visible; }
   .month svg rect.day { cursor: pointer; }
 
-  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; margin: 26px 0 8px; font-size: 15px; }
-  .legend div { display: flex; align-items: center; gap: 7px; }
+  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; margin: 12px 0 0; font-size: 12px; }
+  .legend div { display: flex; align-items: center; gap: 4px; }
+  .legend .sw { width: 13px; height: 13px; border-radius: 4px; border-width: 2px; }
   .sw { width: 20px; height: 20px; border-radius: 5px; border: 2.5px solid var(--ink); flex: none; }
-  .note { text-align: center; color: var(--muted); font-size: 12px; margin: 10px 0 0; }
+  .note { color: var(--muted); font-size: 12px; margin: 10px 0 0; font-weight: 700; }
 
-  .backup { display: flex; justify-content: center; gap: 18px; margin-top: 18px; font-size: 13px; }
+  .backup { display: flex; justify-content: center; gap: 14px; margin-top: 4px; font-size: 11px; }
   .backup button, .link { background: none; border: 0; color: var(--muted); text-decoration: underline; padding: 4px; }
 
   /* Bottom sheet */
@@ -94,7 +106,8 @@
   .drinks { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
   .drinks li { display: flex; align-items: center; gap: 10px; border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px 8px 8px 12px; }
   .drinks .emoji { font-size: 22px; }
-  .drinks .info { flex: 1; line-height: 1.2; }
+  .drinks .info { flex: 1; line-height: 1.2; background: none; border: 0; padding: 0; text-align: left; font-weight: 800; }
+  .drinks .info small::after { content: " · tap to edit"; }
   .drinks .info small { display: block; color: var(--muted); font-size: 13px; }
   .drinks .del { width: 32px; height: 32px; border-radius: 10px; border: 0; background: var(--soft); font-size: 16px; }
   .empty { color: var(--muted); text-align: center; font-size: 14px; margin: 4px 0 12px; }
@@ -136,13 +149,17 @@
       <h1 id="yearLabel"></h1>
       <button class="icon-btn" id="nextYear" aria-label="Next year">›</button>
     </div>
-    <button class="chunky today-btn" id="logToday">Log today</button>
+    <div class="head-right">
+      <label class="chunky pick" aria-label="Pick a day to edit">📅<input type="date" id="pickDay"></label>
+      <button class="chunky today-btn" id="logToday">Log today</button>
+    </div>
   </header>
 
   <section class="stats" id="stats"></section>
+  <p class="recent-title">Last 7 days — tap to edit</p>
+  <section class="recent" id="recent"></section>
   <section class="months" id="months"></section>
   <section class="legend" id="legend"></section>
-  <p class="note">Counts are US standard drinks (0.6 oz of alcohol — e.g. a 12 oz 5% beer or a 1.5 oz shot of 40% whiskey).</p>
 
   <div class="backup">
     <button id="exportBtn">Export backup</button>
@@ -194,6 +211,7 @@
       <button class="chunky dry-btn" id="dryBtn">✓ No drinks this day</button>
       <label class="toggle"><input type="checkbox" id="blackoutIn"> Blackout</label>
     </div>
+    <p class="note">Counts are US standard drinks (0.6 oz of alcohol — e.g. a 12 oz 5% beer or a 1.5 oz shot of 40% whiskey).</p>
     <button class="chunky done" id="doneBtn">Done</button>
     <button class="link" id="clearDay" style="width:100%;margin-top:6px">Clear this day</button>
   </div>
@@ -239,7 +257,7 @@
     if (e == null) return null;
     if (typeof e === "number") return e;
     if (e.blackout) return 4;
-    const t = dayTotal(e);
+    const t = Math.round(dayTotal(e) * 10) / 10; // match the rounded total shown on screen
     if (t === 0) return 0;
     if (t < 2.5) return 1;
     if (t < 5.5) return 2;
@@ -339,21 +357,53 @@
       <div class="stat"><b>${streak}</b><span>Dry streak</span></div>`;
   }
 
+  function renderRecent() {
+    const t = todayDate(), out = [];
+    for (let i = 6; i >= 0; i--) {
+      const dt = new Date(t); dt.setDate(t.getDate() - i);
+      const k = dateKey(dt), e = data[k], lvl = levelOf(e), tot = dayTotal(e);
+      const bg = lvl == null ? "#fff" : LEVELS[lvl].color;
+      const label = tot ? fmt(tot) : "";
+      out.push(`<button class="rday${i === 0 ? " today" : ""}" data-key="${k}">
+        <small>${dt.toLocaleDateString(undefined, { weekday: "short" })}</small><b>${dt.getDate()}</b>
+        <span class="sw" style="background:${bg};color:${lvl >= 3 ? "#fff" : "#121212"}">${label}</span></button>`);
+    }
+    document.getElementById("recent").innerHTML = out.join("");
+    document.getElementById("pickDay").max = dateKey(t);
+  }
+
   function render() {
+    renderRecent();
     document.getElementById("yearLabel").textContent = year;
     const tk = dateKey(todayDate());
     document.getElementById("months").innerHTML = MONTHS.map((_, m) => renderMonth(year, m, tk)).join("");
     renderStats();
+    fit();
   }
 
   document.getElementById("legend").innerHTML = LEVELS
-    .map(l => `<div><span class="sw" style="background:${l.color}"></span>${l.label}</div>`).join("");
+    .map(l => `<div><span class="sw" style="background:${l.color}"></span>${l.label === "No Drinks" ? "None" : l.label.replace(" Drinks", "")}</div>`).join("");
+
+  // Shrink the calendar so the whole main screen fits without scrolling.
+  function fit() {
+    const g = document.getElementById("months");
+    g.style.maxWidth = "";
+    for (let i = 0; i < 3; i++) {
+      const extra = document.documentElement.scrollHeight - window.innerHeight;
+      if (extra <= 0) break;
+      const w = Math.max(220, g.offsetWidth * (g.offsetHeight - extra) / g.offsetHeight);
+      g.style.maxWidth = w + "px";
+    }
+  }
+  window.addEventListener("resize", fit);
+  if (document.fonts) document.fonts.ready.then(fit);
 
   // ---- day sheet ----
   const $ = id => document.getElementById(id);
   const root = $("sheetRoot");
   let editing = null;   // date key
-  let adding = null;    // drink type being added
+  let adding = null;    // drink type being added or edited
+  let editIdx = null;   // index of the drink being edited, or null when adding
 
   // Get the day's entry as an editable drink log (converting an old-style level if needed).
   function entryFor(k) {
@@ -386,7 +436,7 @@
     $("drinkList").innerHTML = drinks.map((d, i) => {
       const t = TYPES[d.type] || { name: d.type, emoji: "🍹" };
       return `<li><span class="emoji">${t.emoji}</span>
-        <div class="info">${t.name} · ${fmt(d.oz)} oz · ${fmt(d.abv)}%<small>${fmt(stdDrinks(d))} standard drinks</small></div>
+        <button class="info" data-edit="${i}">${t.name} · ${fmt(d.oz)} oz · ${fmt(d.abv)}%<small>${fmt(stdDrinks(d))} standard drinks</small></button>
         <button class="del" data-del="${i}" aria-label="Remove">✕</button></li>`;
     }).join("");
     $("emptyMsg").hidden = drinks.length > 0 || !!e;
@@ -398,22 +448,23 @@
     $("clearDay").hidden = e == null;
   }
 
-  function openSheet(k) { editing = k; adding = null; renderSheet(); root.classList.add("open"); }
-  function closeSheet() { root.classList.remove("open"); editing = null; adding = null; }
+  function openSheet(k) { editing = k; adding = null; editIdx = null; renderSheet(); root.classList.add("open"); }
+  function closeSheet() { root.classList.remove("open"); editing = null; adding = null; editIdx = null; }
   function shiftDay(n) {
     const dt = parseKey(editing); dt.setDate(dt.getDate() + n);
     if (n > 0 && dt > todayDate()) return;
-    editing = dateKey(dt); adding = null;
+    editing = dateKey(dt); adding = null; editIdx = null;
     if (dt.getFullYear() !== year) { year = dt.getFullYear(); render(); }
     renderSheet();
   }
   const commit = () => { save(); render(); renderSheet(); };
 
   // ---- add-drink form ----
-  function openForm(type) {
-    adding = type;
-    const t = TYPES[type], p = prefs[type] || {};
-    $("formTitle").textContent = `${t.emoji} Add ${t.name.toLowerCase()}`;
+  function openForm(type, idx = null) {
+    adding = type; editIdx = idx;
+    const t = TYPES[type], p = idx == null ? (prefs[type] || {}) : data[editing].drinks[idx];
+    $("formTitle").textContent = `${t.emoji} ${idx == null ? "Add" : "Edit"} ${t.name.toLowerCase()}`;
+    $("confirmAdd").textContent = idx == null ? "Add" : "Save";
     $("ozIn").value = p.oz ?? t.oz;
     $("abvIn").value = p.abv ?? t.abv;
     updateForm();
@@ -435,20 +486,28 @@
   });
   $("ozIn").addEventListener("input", updateForm);
   $("abvIn").addEventListener("input", updateForm);
-  $("cancelAdd").onclick = () => { adding = null; renderSheet(); };
+  $("cancelAdd").onclick = () => { adding = null; editIdx = null; renderSheet(); };
   $("confirmAdd").onclick = () => {
     const oz = parseFloat($("ozIn").value), abv = parseFloat($("abvIn").value);
     if (!(oz > 0 && abv > 0 && abv <= 100)) return;
-    entryFor(editing).drinks.push({ type: adding, oz, abv });
-    prefs[adding] = { oz, abv }; store(PREFS_KEY, prefs);
-    adding = null;
+    const drink = { type: adding, oz, abv };
+    if (editIdx == null) {
+      entryFor(editing).drinks.push(drink);
+      prefs[adding] = { oz, abv }; store(PREFS_KEY, prefs);
+    } else {
+      data[editing].drinks[editIdx] = drink;
+    }
+    adding = null; editIdx = null;
     commit();
   };
 
   $("addRow").addEventListener("click", e => { const b = e.target.closest("[data-add]"); if (b) openForm(b.dataset.add); });
   $("drinkList").addEventListener("click", e => {
+    const ed = e.target.closest("[data-edit]");
+    if (ed) { const i = Number(ed.dataset.edit); openForm(data[editing].drinks[i].type, i); return; }
     const b = e.target.closest("[data-del]"); if (!b) return;
     data[editing].drinks.splice(Number(b.dataset.del), 1);
+    adding = null; editIdx = null;
     commit();
   });
   $("dryBtn").onclick = () => { data[editing] = { drinks: [] }; commit(); };
@@ -468,6 +527,16 @@
     const r = e.target.closest("rect.day"); if (!r) return;
     if (parseKey(r.dataset.key) > todayDate()) return; // can't log the future
     openSheet(r.dataset.key);
+  });
+  function openDay(k) {
+    const y = parseKey(k).getFullYear();
+    if (y !== year) { year = y; render(); }
+    openSheet(k);
+  }
+  $("recent").addEventListener("click", e => { const b = e.target.closest(".rday"); if (b) openDay(b.dataset.key); });
+  $("pickDay").addEventListener("change", e => {
+    const k = e.target.value; e.target.value = "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(k) && parseKey(k) <= todayDate()) openDay(k);
   });
   $("logToday").onclick = () => {
     const t = todayDate();

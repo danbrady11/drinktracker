@@ -10,7 +10,7 @@ A simple year-at-a-glance drink tracker. Each day of the year is a square, color
 | Red | 6+ drinks |
 | Dark gray | Blackout |
 
-Tap **Log today** or any past day, then add each beer or whiskey with its size (oz) and ABV. The app converts them to US standard drinks (0.6 oz of pure alcohol) and colors the day by the total. You can also mark a day as dry or as a blackout. Data is stored in your browser (`localStorage`) on that device — use **Export backup** occasionally so you don't lose it if you clear Safari/Chrome data.
+Tap **Log today**, a day in the "Last 7 days" row, a calendar square, or 📅 to pick any past date. Then add each beer or whiskey with its size (oz) and ABV. The app converts them to US standard drinks (0.6 oz of pure alcohol) and colors the day by the total. Tap a logged drink to change its size or ABV, or ✕ to remove it. You can also mark a day as dry or as a blackout. Data is stored in your browser (`localStorage`) on that device — use **Export backup** occasionally so you don't lose it if you clear Safari/Chrome data.
 
 ## Hosting on GitHub Pages
 
