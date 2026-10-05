@@ -1,1 +1,19 @@
 # drinktracker
+
+A simple year-at-a-glance drink tracker. Each day of the year is a square, colored by how much you drank:
+
+| Color | Meaning |
+|---|---|
+| Green | No drinks |
+| Yellow | 1–2 drinks |
+| Orange | 3–5 drinks |
+| Red | 6+ drinks |
+| Dark gray | Blackout |
+
+Tap **Log today** or any past day to set it. Data is stored in your browser (`localStorage`) on that device — use **Export backup** occasionally so you don't lose it if you clear Safari/Chrome data.
+
+## Hosting on GitHub Pages
+
+1. Repo **Settings → Pages**.
+2. Source: **Deploy from a branch**, branch `main`, folder `/ (root)`.
+3. Open `https://<your-username>.github.io/drinktracker/` on your phone and bookmark it (or Share → **Add to Home Screen** for an app-style icon).

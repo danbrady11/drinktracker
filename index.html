@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Drink Tracker</title>
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Drinks">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #121212;
+    --muted: #6b6b6b;
+    --bg: #ffffff;
+    --card: #ffffff;
+    --line: #e9e9e9;
+    --l0: #b5d84c; /* no drinks */
+    --l1: #fde047; /* 1-2 */
+    --l2: #f6a03a; /* 3-5 */
+    --l3: #e8453c; /* 6+ */
+    --l4: #3a3d4a; /* blackout */
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: "Nunito", ui-rounded, system-ui, sans-serif;
+    font-weight: 800;
+    padding: calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 24px);
+  }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .wrap { max-width: 560px; margin: 0 auto; }
+
+  header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+  .year { display: flex; align-items: center; gap: 4px; }
+  .year h1 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: .5px; min-width: 72px; text-align: center; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 12px; border: 2.5px solid var(--ink);
+    background: var(--card); display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0;
+  }
+  .today-btn {
+    border: 2.5px solid var(--ink); background: var(--l0); border-radius: 14px;
+    padding: 9px 14px; font-size: 15px; font-weight: 900; box-shadow: 0 3px 0 var(--ink);
+  }
+  .today-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 18px; }
+  .stat { border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px 6px; text-align: center; }
+  .stat b { display: block; font-size: 22px; font-weight: 900; line-height: 1.1; }
+  .stat span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+
+  .months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px 14px; }
+  .month h2 { margin: 0 0 2px; text-align: center; font-size: 13px; font-weight: 900; letter-spacing: .5px; }
+  .dow { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 2px; font-size: 10px; text-align: center; margin-bottom: 2px; }
+  .month svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .month svg rect.day { cursor: pointer; }
+
+  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; margin: 26px 0 8px; font-size: 15px; }
+  .legend div { display: flex; align-items: center; gap: 7px; }
+  .sw { width: 20px; height: 20px; border-radius: 5px; border: 2.5px solid var(--ink); flex: none; }
+
+  .backup { display: flex; justify-content: center; gap: 18px; margin-top: 22px; font-size: 13px; }
+  .backup button { background: none; border: 0; color: var(--muted); text-decoration: underline; padding: 4px; }
+
+  /* Bottom sheet */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 560px;
+    background: var(--card); border: 2.5px solid var(--ink); border-bottom: 0; border-radius: 22px 22px 0 0;
+    padding: 16px 16px calc(env(safe-area-inset-bottom) + 18px);
+    transform: translateY(105%); visibility: hidden; transition: transform .22s ease-out, visibility 0s .22s;
+  }
+  .open .scrim { opacity: 1; pointer-events: auto; }
+  .open .sheet { transform: none; visibility: visible; transition: transform .22s ease-out; }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .sheet-head h3 { margin: 0; font-size: 19px; font-weight: 900; text-align: center; flex: 1; }
+  .opts { display: grid; gap: 8px; }
+  .opt {
+    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+    border: 2.5px solid var(--ink); border-radius: 14px; background: var(--card); padding: 12px 14px; font-size: 17px;
+  }
+  .opt .sw { width: 24px; height: 24px; border-radius: 7px; }
+  .opt.sel { box-shadow: inset 0 0 0 2px var(--ink); background: #f4f4f4; }
+  .opt.sel::after { content: "✓"; margin-left: auto; font-size: 18px; }
+  .clear { margin-top: 10px; width: 100%; background: none; border: 0; color: var(--muted); font-size: 15px; padding: 8px; text-decoration: underline; }
+  .clear[hidden] { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="year">
+      <button class="icon-btn" id="prevYear" aria-label="Previous year">‹</button>
+      <h1 id="yearLabel"></h1>
+      <button class="icon-btn" id="nextYear" aria-label="Next year">›</button>
+    </div>
+    <button class="today-btn" id="logToday">Log today</button>
+  </header>
+
+  <section class="stats" id="stats"></section>
+  <section class="months" id="months"></section>
+  <section class="legend" id="legend"></section>
+
+  <div class="backup">
+    <button id="exportBtn">Export backup</button>
+    <button id="importBtn">Import backup</button>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+  </div>
+</div>
+
+<div id="sheetRoot">
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-head">
+      <button class="icon-btn" id="prevDay" aria-label="Previous day">‹</button>
+      <h3 id="sheetTitle"></h3>
+      <button class="icon-btn" id="nextDay" aria-label="Next day">›</button>
+    </div>
+    <div class="opts" id="opts"></div>
+    <button class="clear" id="clearDay">Clear this day</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const STORE_KEY = "drinktracker.v1";
+  const LEVELS = [
+    { label: "No Drinks", color: "var(--l0)" },
+    { label: "1-2 Drinks", color: "var(--l1)" },
+    { label: "3-5 Drinks", color: "var(--l2)" },
+    { label: "6+ Drinks",  color: "var(--l3)" },
+    { label: "Blackout",   color: "var(--l4)" },
+  ];
+  const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  // ---- storage ----
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { data = {}; }
+  const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {} };
+
+  const pad = n => String(n).padStart(2, "0");
+  const keyOf = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+  const parseKey = k => { const [y, m, d] = k.split("-").map(Number); return new Date(y, m - 1, d); };
+  const todayDate = () => { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); };
+  const dateKey = dt => keyOf(dt.getFullYear(), dt.getMonth(), dt.getDate());
+
+  let year = new Date().getFullYear();
+
+  // ---- month shape ----
+  const C = 20;   // cell size (svg units)
+  const P = 3;    // padding for outline stroke
+  const R = 6;    // corner radius
+
+  // Build a rounded outline path around the calendar "staircase" shape.
+  function shapePath(start, end, rows) {
+    // start: column of day 1 (0=Mon), end: column of last day, rows: number of week rows
+    let pts = [[start, 0], [7, 0]];
+    if (end < 6) pts.push([7, rows - 1], [end + 1, rows - 1], [end + 1, rows]);
+    else pts.push([7, rows]);
+    pts.push([0, rows]);
+    if (start > 0) pts.push([0, 1], [start, 1]);
+    else pts[0] = [0, 0];
+    pts = pts.map(([x, y]) => [P + x * C, P + y * C]);
+
+    const n = pts.length;
+    let d = "";
+    for (let i = 0; i < n; i++) {
+      const prev = pts[(i - 1 + n) % n], cur = pts[i], next = pts[(i + 1) % n];
+      const inLen = Math.hypot(cur[0] - prev[0], cur[1] - prev[1]);
+      const outLen = Math.hypot(next[0] - cur[0], next[1] - cur[1]);
+      const r = Math.min(R, inLen / 2, outLen / 2);
+      const a = [cur[0] + (prev[0] - cur[0]) / inLen * r, cur[1] + (prev[1] - cur[1]) / inLen * r];
+      const b = [cur[0] + (next[0] - cur[0]) / outLen * r, cur[1] + (next[1] - cur[1]) / outLen * r];
+      d += (i === 0 ? `M${a[0]},${a[1]}` : `L${a[0]},${a[1]}`) + `Q${cur[0]},${cur[1]} ${b[0]},${b[1]}`;
+    }
+    return d + "Z";
+  }
+
+  function renderMonth(y, m, todayKey) {
+    const first = new Date(y, m, 1);
+    const days = new Date(y, m + 1, 0).getDate();
+    const start = (first.getDay() + 6) % 7;            // Monday-first
+    const end = (start + days - 1) % 7;
+    const rows = Math.ceil((start + days) / 7);
+    const w = 7 * C + 2 * P, h = rows * C + 2 * P;
+    const path = shapePath(start, end, rows);
+    const clipId = `clip-${y}-${m}`;
+
+    let cells = "", todayMark = "";
+    for (let d = 1; d <= days; d++) {
+      const idx = start + d - 1, col = idx % 7, row = Math.floor(idx / 7);
+      const k = keyOf(y, m, d);
+      const lvl = data[k];
+      const fill = lvl == null ? "#fff" : LEVELS[lvl].color;
+      const x = P + col * C, yy = P + row * C;
+      cells += `<rect class="day" data-key="${k}" x="${x}" y="${yy}" width="${C}" height="${C}" style="fill:${fill}" stroke="#fff" stroke-width="2.2"><title>${MONTHS[m]} ${d}</title></rect>`;
+      if (k === todayKey) {
+        todayMark = `<rect x="${x + 3}" y="${yy + 3}" width="${C - 6}" height="${C - 6}" rx="3" fill="none" stroke="${lvl === 4 ? "#fff" : "#121212"}" stroke-width="2" pointer-events="none"/>`;
+      }
+    }
+    return `
+      <div class="month">
+        <h2>${MONTHS[m].toUpperCase()}</h2>
+        <div class="dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+        <svg viewBox="0 0 ${w} ${h}" aria-label="${MONTHS[m]} ${y}">
+          <defs><clipPath id="${clipId}"><path d="${path}"/></clipPath></defs>
+          <g clip-path="url(#${clipId})">${cells}${todayMark}</g>
+          <path d="${path}" fill="none" stroke="#121212" stroke-width="2.6" stroke-linejoin="round" pointer-events="none"/>
+        </svg>
+      </div>`;
+  }
+
+  function renderStats() {
+    const yearKeys = Object.keys(data).filter(k => k.startsWith(year + "-"));
+    const dry = yearKeys.filter(k => data[k] === 0).length;
+    const drinking = yearKeys.filter(k => data[k] > 0).length;
+
+    // Current streak of logged "no drinks" days ending today (or yesterday if today isn't logged yet).
+    let streak = 0;
+    const cur = todayDate();
+    if (data[dateKey(cur)] == null) cur.setDate(cur.getDate() - 1);
+    while (data[dateKey(cur)] === 0) { streak++; cur.setDate(cur.getDate() - 1); }
+
+    document.getElementById("stats").innerHTML = `
+      <div class="stat"><b>${dry}</b><span>Dry days</span></div>
+      <div class="stat"><b>${drinking}</b><span>Drink days</span></div>
+      <div class="stat"><b>${streak}</b><span>Dry streak</span></div>`;
+  }
+
+  function render() {
+    document.getElementById("yearLabel").textContent = year;
+    const tk = dateKey(todayDate());
+    document.getElementById("months").innerHTML = MONTHS.map((_, m) => renderMonth(year, m, tk)).join("");
+    renderStats();
+  }
+
+  // ---- legend ----
+  document.getElementById("legend").innerHTML = LEVELS
+    .map(l => `<div><span class="sw" style="background:${l.color}"></span>${l.label}</div>`).join("");
+
+  // ---- sheet ----
+  const root = document.getElementById("sheetRoot");
+  const optsEl = document.getElementById("opts");
+  let editing = null;
+
+  function fmtDate(dt) {
+    return dt.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+  }
+  function renderSheet() {
+    const dt = parseKey(editing);
+    document.getElementById("sheetTitle").textContent = fmtDate(dt);
+    const cur = data[editing];
+    optsEl.innerHTML = LEVELS.map((l, i) =>
+      `<button class="opt${cur === i ? " sel" : ""}" data-level="${i}"><span class="sw" style="background:${l.color}"></span>${l.label}</button>`
+    ).join("");
+    document.getElementById("clearDay").hidden = cur == null;
+    document.getElementById("nextDay").disabled = editing >= dateKey(todayDate());
+    document.getElementById("nextDay").style.opacity = editing >= dateKey(todayDate()) ? .3 : 1;
+  }
+  function openSheet(k) { editing = k; renderSheet(); root.classList.add("open"); }
+  function closeSheet() { root.classList.remove("open"); editing = null; }
+  function shiftDay(n) {
+    const dt = parseKey(editing); dt.setDate(dt.getDate() + n);
+    if (n > 0 && dt > todayDate()) return;
+    editing = dateKey(dt);
+    if (dt.getFullYear() !== year) { year = dt.getFullYear(); render(); }
+    renderSheet();
+  }
+
+  optsEl.addEventListener("click", e => {
+    const b = e.target.closest(".opt"); if (!b) return;
+    data[editing] = Number(b.dataset.level);
+    save(); render(); closeSheet();
+  });
+  document.getElementById("clearDay").onclick = () => { delete data[editing]; save(); render(); closeSheet(); };
+  document.getElementById("scrim").onclick = closeSheet;
+  document.getElementById("prevDay").onclick = () => shiftDay(-1);
+  document.getElementById("nextDay").onclick = () => shiftDay(1);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+
+  document.getElementById("months").addEventListener("click", e => {
+    const r = e.target.closest("rect.day"); if (!r) return;
+    if (parseKey(r.dataset.key) > todayDate()) return; // can't log the future
+    openSheet(r.dataset.key);
+  });
+  document.getElementById("logToday").onclick = () => {
+    const t = todayDate();
+    if (year !== t.getFullYear()) { year = t.getFullYear(); render(); }
+    openSheet(dateKey(t));
+  };
+  document.getElementById("prevYear").onclick = () => { year--; render(); };
+  document.getElementById("nextYear").onclick = () => { year++; render(); };
+
+  // ---- backup ----
+  document.getElementById("exportBtn").onclick = () => {
+    const blob = new Blob([JSON.stringify(data, null, 1)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `drinktracker-${dateKey(todayDate())}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+  const fileIn = document.getElementById("importFile");
+  document.getElementById("importBtn").onclick = () => fileIn.click();
+  fileIn.onchange = async () => {
+    const f = fileIn.files[0]; if (!f) return;
+    try {
+      const parsed = JSON.parse(await f.text());
+      let n = 0;
+      for (const [k, v] of Object.entries(parsed)) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(k) && Number.isInteger(v) && v >= 0 && v < LEVELS.length) { data[k] = v; n++; }
+      }
+      save(); render();
+      alert(`Imported ${n} days.`);
+    } catch (e) { alert("That file doesn't look like a Drink Tracker backup."); }
+    fileIn.value = "";
+  };
+
+  // Refresh when returning to the app (e.g. the next morning).
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && !editing) render(); });
+
+  render();
+})();
+</script>
+</body>
+</html>
